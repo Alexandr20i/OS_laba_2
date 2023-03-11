@@ -57,6 +57,7 @@ int main() {
         if (comands.size() == 3) {
             if (comands[0] == "rename") {}
             if (comands[0] == "copy") {}
+            if (comands[0] == "lol") {}
         }
 
     } while (true);
