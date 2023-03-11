@@ -105,7 +105,7 @@ int main() {
 
 
 
-/* без ключа
+/* без ключа  uilboilvboulvoulvh
 vector<string> comand;
 string word;
 for (int i = 0; i < 3; ++i) {
