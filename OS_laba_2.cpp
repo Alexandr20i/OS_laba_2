@@ -11,6 +11,10 @@
 
 using namespace std;
 
+// есть: rename, remove, open, close, 
+// есть: переименовывание, удаление, открытие (если 3 то норм открыл), закрытие(если 0 то норм закрыл)
+
+
 void welcome() {
     cout << "Select command date: " << endl;
     cout << "- copy (copy file)" << endl;
@@ -18,6 +22,10 @@ void welcome() {
     cout << "- get_information (get information: access, weight, time changes)" << endl;
     cout << "- change_access (change access)" << endl;
 }
+
+
+
+
 
 
 int main() {
@@ -55,15 +63,27 @@ int main() {
         }
         // выполняем команды терминала
         if (comands.size() == 3) {
-            if (comands[0] == "rename") {}
-            if (comands[0] == "copy") {}
-            if (comands[0] == "lol") {}
+            //if (comands[0] == "rename") {}
+            //if (comands[0] == "copy") {}
+            //if (comands[0] == "lol") {}
+            if (comands[0] == "get") {
+                if (comands[1] == "size") {
+                    
+                }
+                if (comands[1] == "right") {
+
+                }
+                if (comands[1] == "tmchange") {
+
+                }
+
+            }
+        }
+        if (comands.size() == 4) {
+
         }
 
     } while (true);
-
-
-
 
     return 0;
 }
@@ -230,8 +250,7 @@ if (comand[comand.size()-1] == "--help")
 
 
 
-                // есть: rename, remove, open, close, 
-                // есть: переименовывание, удаление, открытие (если 3 то норм открыл), закрытие(если 0 то норм закрыл)
+
 
 
 
