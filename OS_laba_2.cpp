@@ -1,6 +1,8 @@
-﻿#include <iostream>
+﻿#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
 #include <fcntl.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 #include <fstream>
 #include <vector>
 #include <map>
@@ -8,7 +10,7 @@
 #include <string>
 #include <sstream>
 #include <ctime>
-#include <unistd.h>
+//#include <unistd.h> //хуй знает, походу на window не работает эта хуйня 
 #include <io.h>
 
 
@@ -27,16 +29,16 @@ void welcome() {
 }
 
 // получаем информацию о файле 
-int get_information(string comand ,string file_name) {
+void get_information(string comand ,const string& file_name) {
     
-    int file_descriptor = open(file_name, O_RDONLY);  // открываем файл // O_RDONLY - определяет флаг доступа к файлу в режиме "только для чтения" (read-only). Это означает, что файл может быть только прочитан, но не изменен или записан.
-    if (file_descriptor == -1) {
+    int file_descriptor = _open(file_name.c_str(), O_RDONLY);  // открываем файл // O_RDONLY - определяет флаг доступа к файлу в режиме "только для чтения" (read-only). Это означает, что файл может быть только прочитан, но не изменен или записан.
+    if (file_descriptor == -1) { // выходим из функции, при неудачном чтении файла
         cout << "Ошибка открытия файла! " << endl;
-        return 1;
+        return;
     }
     
     struct stat file_info; // содержит информацию о файле, такую как размер файла...
-    if(fstat(file_descriptor, &file_info) == 0 || stat(file_name, &file_info) == 0 || lstat(file_name, &file_info) == 0 ){
+    if(fstat(file_descriptor, &file_info) == 0 || stat(file_name.c_str(), &file_info) == 0 /* || lstat(file_name.c_str(), &file_info) == 0* не работает на windows */) {
 
         if (comand == "size")
             cout << "Размер файла: " << file_info.st_size << " байт" << endl;
@@ -46,6 +48,7 @@ int get_information(string comand ,string file_name) {
 
         if (comand == "time_last_change")
             cout << "Время последнего изменения: " << ctime(&file_info.st_mtime) << endl;
+        _close(file_descriptor); // в ubuntu писать: close(file_descriptor);
     }
     else 
         cout << "Ошибка при получении информации о файле" << endl;
@@ -92,10 +95,10 @@ int main() {
             //if (comands[0] == "rename") {}
             //if (comands[0] == "copy") {}
             //if (comands[0] == "lol") {}
+
             if (comands[0] == "get") {
                 if (comands[1] == "size" || comands[1] == "right" || comands[1] == "time_last_change") {
                     get_information(comands[1], comands[2]);
-                    
                 }/*
                 if (comands[1] == "right") {
                     get_information();
