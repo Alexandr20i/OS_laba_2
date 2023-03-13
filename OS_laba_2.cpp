@@ -12,9 +12,11 @@
 #include <ctime>
 //#include <unistd.h> //хуй знает, походу на window не работает эта хуйня 
 #include <io.h>
+#include <set>
 
 
 using namespace std;
+
 
 // есть: rename, remove, open, close, 
 // есть: переименовывание, удаление, открытие (если 3 то норм открыл), закрытие(если 0 то норм закрыл)
@@ -31,11 +33,9 @@ void welcome() {
 // получаем информацию о файле 
 void get_information(string comand ,const string& file_name) {
     
-    int file_descriptor = _open(file_name.c_str(), O_RDONLY);  // открываем файл // O_RDONLY - определяет флаг доступа к файлу в режиме "только для чтения" (read-only). Это означает, что файл может быть только прочитан, но не изменен или записан.
-    if (file_descriptor == -1) { // выходим из функции, при неудачном чтении файла
-        cout << "Ошибка открытия файла! " << endl;
-        return;
-    }
+    int file_descriptor = _open(file_name.c_str(), O_RDONLY);  // открываем файл в ubuntu: open(file_name.c_str(), O_RDONLY) // O_RDONLY - определяет флаг доступа к файлу в режиме "только для чтения" (read-only). Это означает, что файл может быть только прочитан, но не изменен или записан.
+    if (file_descriptor == -1) // выходим из функции, при неудачном чтении файла
+        cout << "Ошибка открытия файла! " << endl; return;
     
     struct stat file_info; // содержит информацию о файле, такую как размер файла...
     if(fstat(file_descriptor, &file_info) == 0 || stat(file_name.c_str(), &file_info) == 0 /* || lstat(file_name.c_str(), &file_info) == 0* не работает на windows */) {
@@ -55,7 +55,38 @@ void get_information(string comand ,const string& file_name) {
 }
 
 
+/*
+0 - никаких прав;
+1 - только выполнение;
+2 - только запись;
+3 - выполнение и запись;
+4 - только чтение;
+5 - чтение и выполнение;
+6 - чтение и запись;
+7 - чтение запись и выполнение.
+*/
+// изменяем права доступа файла
+void change_mod(string comand, string file_name) {
+    chmod(file_name.c_str(), stoi(comand));
+}
 
+bool control_input_chmod(const string& comand) {
+
+    //set <string> list {"---", "--x", "-w-", "-wr", "r--", "r-w", "rw-", "rwx"};
+    //return (list.find(comand) != list.end()) ? 1 : 0;
+
+    int num = stoi(comand);
+    int count = 0;
+    bool flage = true;
+    while (num > 0) {
+        if (num % 10 >= 0 && num % 10 < 8)
+            num /= 10;
+        else
+            cout << "Неверный режим: " + comand << endl;  return 0;
+    }
+
+    return 1;
+}
 
 int main() {
     setlocale(LC_ALL, "Russian");
@@ -94,22 +125,36 @@ int main() {
         if (comands.size() == 3) {
             //if (comands[0] == "rename") {}
             //if (comands[0] == "copy") {}
-            //if (comands[0] == "lol") {}
-
+            
             if (comands[0] == "get") {
-                if (comands[1] == "size" || comands[1] == "right" || comands[1] == "time_last_change") {
+                if (comands[1] == "size" || comands[1] == "right" || comands[1] == "time_last_change") 
                     get_information(comands[1], comands[2]);
-                }/*
-                if (comands[1] == "right") {
-                    get_information();
-                }
-                if (comands[1] == "tmchange") {
-                    get_information();
-                }*/
                 else
-                    cout << "Такой команды не существует! " << endl;
-
+                    cout << "Такой команды не существует! " << endl << "используйте --help " << endl;
             }
+
+
+            if (comands[0] == "chmod") {
+                //cout << "надо так: chmod 777 file.txt" << endl;
+                //cout << "не надо так ) : chmod ugo+rwx file.txt" << endl;
+                if (control_input_chmod(comands[1]))
+                    change_mod(comands[1], comands[2]);
+                else
+                    cout << "еблан?!? ";
+            }
+
+/*
+                if (comands[1] == "---" || comands[1] == "000") {
+                    change_mod(comands[1]);
+                }
+                if (comands[1] == "--x" || comands[1] == "001");
+                if (comands[1] == "-w-" || comands[1] == "010");
+                if (comands[1] == "-wx" || comands[1] == "011");
+                if (comands[1] == "r--" || comands[1] == "100");
+                if (comands[1] == "r-x" || comands[1] == "101");
+                if (comands[1] == "rw-" || comands[1] == "110");
+                if (comands[1] == "rwx" || comands[1] == "111");*/
+            
         }
         if (comands.size() == 4) {
 
