@@ -17,7 +17,7 @@
 
 using namespace std;
 
-
+// Sanyoooooooooooooooooooooooooooooooooooooooooooooooooook
 // есть: rename, remove, open, close, 
 // есть: переименовывание, удаление, открытие (если 3 то норм открыл), закрытие(если 0 то норм закрыл)
 
